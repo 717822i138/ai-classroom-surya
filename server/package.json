@@ -1,0 +1,14 @@
+{
+  "name": "classroom-server",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.14",
+    "socket.io": "^4.7.5"
+  }
+}
