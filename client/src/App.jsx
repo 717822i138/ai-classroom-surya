@@ -1,3 +1,4 @@
+import InstallButton from './InstallButton';
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useRoomState, Stream, Classwork, People, DoubtBot, Comments } from './Panels.jsx';
@@ -22,6 +23,7 @@ function Header({ name }) {
         </h1>
         <p className="tag">Classroom with AI</p>
       </div>
+      <InstallButton />
       {name && <div className="who"><span>{name}</span><div className="av" style={{ background: '#1d4e89' }}>{name[0]?.toUpperCase()}</div></div>}
     </header>
   );
