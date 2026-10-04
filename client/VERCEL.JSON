@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://ai-classroom-server.onrender.com/api/:path*" },
+    { "source": "/api/:path*", "destination": "https://ai-classroom-surya.onrender.com/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
