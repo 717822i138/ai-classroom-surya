@@ -73,22 +73,29 @@ const mailer = process.env.SMTP_USER ? nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com', port: 465, secure: true, auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } }) : null;
 
 // Render free la SMTP ports block, adhanaala HTTPS email API (Brevo) support
+// Key / sender la thetri space, quotes vandhaalum trim pannidum
+const clean = (v) => String(v || '').trim().replace(/^["']|["']$/g, '');
+const BREVO_KEY = clean(process.env.BREVO_API_KEY);
+const MAIL_FROM = clean(process.env.MAIL_FROM) || clean(process.env.SMTP_USER);
+console.log('Mail config -> BREVO_API_KEY set:', !!BREVO_KEY, '| MAIL_FROM:', MAIL_FROM || '(none)', '| SMTP fallback:', !!mailer);
+
 async function sendMail(to, subject, text) {
-  if (process.env.BREVO_API_KEY) {
+  if (BREVO_KEY) {
     const r = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST',
-      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: 'Surya Engineering College', email: process.env.MAIL_FROM || process.env.SMTP_USER }, to: [{ email: to }], subject, textContent: text }) });
+      headers: { 'api-key': BREVO_KEY, 'Content-Type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({ sender: { name: 'Surya Engineering College', email: MAIL_FROM }, to: [{ email: to }], subject, textContent: text }) });
     if (!r.ok) throw new Error('Brevo ' + r.status + ' ' + (await r.text()));
     return;
   }
   await mailer.sendMail({ from: `"Surya Engineering College" <${process.env.SMTP_USER}>`, to, subject, text });
 }
-app.get('/', (_, res) => res.send('Surya Classroom API ok'));
+// Browser la server URL open pannina mail setup status theriyum (key value kaattaadhu)
+app.get('/', (_, res) => res.send(`Surya Classroom API ok | mail: ${BREVO_KEY ? 'brevo ready' : mailer ? 'smtp only' : 'NOT configured'} | sender: ${MAIL_FROM || 'none'}`));
 app.post('/api/auth/send', async (req, res) => {
   const e = norm(req.body.email);
   if (!/^\S+@\S+\.\S+$/.test(e)) return res.status(400).json({ error: 'Enter a valid email' });
   if (limited('otp:' + e, 3, 10 * 60e3) || limited('ip:' + req.ip, 20, 10 * 60e3)) return res.status(429).json({ error: 'Too many attempts. Try again in 10 minutes' });
-  if (!mailer && !process.env.BREVO_API_KEY) return res.status(500).json({ error: 'Email (SMTP) is not configured on the server' });
+  if (!mailer && !BREVO_KEY) return res.status(500).json({ error: 'Email is not configured on the server (BREVO_API_KEY missing)' });
   const code = String(crypto.randomInt(100000, 1000000));
   otps.set(e, { h: mac(code), exp: Date.now() + 10 * 60e3, tries: 0 });
   try {
