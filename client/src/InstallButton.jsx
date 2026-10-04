@@ -44,12 +44,23 @@ export default function InstallButton({ className = '' }) {
   return (
     <>
       <button
-        onClick={install}
-        className={className}
-        style={{ background: '#0b2545', color: '#fff', border: 0, borderRadius: 999, padding: '10px 18px', fontWeight: 600, cursor: 'pointer' }}
-      >
-        ⬇ Install App
-      </button>
+  onClick={install}
+  className={className}
+  style={{
+    background: '#0b2545',
+    color: '#fff',
+    border: 0,
+    borderRadius: 999,
+    padding: '6px 12px',
+    fontSize: 13,
+    fontWeight: 600,
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
+    cursor: 'pointer'
+  }}
+    >
+  ⬇ Install
+    </button>
       {showIos && (
         <p style={{ marginTop: 8, fontSize: 14 }}>
           iPhone la: Safari la <b>Share</b> button → <b>Add to Home Screen</b> click pannunga.
