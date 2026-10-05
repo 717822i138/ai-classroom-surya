@@ -8,6 +8,13 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.png'],
+      // Pudhu deploy aana udane pazhaya cache-a thookki pudhu version load pannum (blank page problem fix)
+      workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
+        navigateFallbackDenylist: [/^\/api/]
+      },
       manifest: {
         name: 'Surya Engineering College Classroom',
         short_name: 'SEC Classroom',
