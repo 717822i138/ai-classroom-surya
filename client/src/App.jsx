@@ -23,7 +23,6 @@ function Header({ name }) {
         </h1>
         <p className="tag">Classroom with AI</p>
       </div>
-      <InstallButton />
       {name && <div className="who"><span>{name}</span><div className="av" style={{ background: '#1d4e89' }}>{name[0]?.toUpperCase()}</div></div>}
     </header>
   );
@@ -123,12 +122,13 @@ export default function App() {
             </div>
           )}
           {err && <div className="pill">{err}</div>}
+          <div style={{ marginTop: 14 }}><InstallButton /></div>
         </div></div>
       ) : cur ? (
         <Shell key={cur.room} role={cur.role} room={cur.room} name={user.name} onBack={() => setCur(null)} />
       ) : (
         <div className="wrap">
-          <div className="row"><h2 className="sec" style={{ flex: 1 }}>Your classes</h2><button className="alt" onClick={logout}>Log out</button></div>
+          <div className="row"><h2 className="sec" style={{ flex: 1 }}>Your classes</h2><InstallButton /><button className="alt" onClick={logout}>Log out</button></div>
           {err && <div className="pill">{err}</div>}
           {!classes.length && <div className="card">No classes yet. Create one or join with a code below.</div>}
           <div className="grid">
